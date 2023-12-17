@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restaurant", "Restaurant\Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp", "WpfApp\WpfApp.csproj", "{8AAC2AFB-D96A-475C-B1FB-98A94DDA6D82}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantManager", "RestaurantManager\RestaurantManager.csproj", "{46C5D322-A3D9-4243-BC58-3F174A2314A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{8AAC2AFB-D96A-475C-B1FB-98A94DDA6D82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AAC2AFB-D96A-475C-B1FB-98A94DDA6D82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AAC2AFB-D96A-475C-B1FB-98A94DDA6D82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46C5D322-A3D9-4243-BC58-3F174A2314A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46C5D322-A3D9-4243-BC58-3F174A2314A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46C5D322-A3D9-4243-BC58-3F174A2314A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46C5D322-A3D9-4243-BC58-3F174A2314A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
