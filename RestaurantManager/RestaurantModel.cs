@@ -1,4 +1,4 @@
-namespace Restaurant
+namespace RestaurantManager
 {
     public class RestaurantModel
     {

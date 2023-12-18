@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Restaurant
+namespace RestaurantManager
 {
     public class Square
     {
