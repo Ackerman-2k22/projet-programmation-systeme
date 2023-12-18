@@ -1,77 +1,92 @@
 using System;
+using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 
-
-
-namespace Restaurant.BDD
+namespace Client
 {
-    public class connection
+    public class DatabaseManager
     {
-        public static void Main1()
+        private string connectionString;
+        private string sqlQuery;
+        private SqlDataAdapter dataAdapter;
+        private SqlConnection connection;
+        private SqlCommand command;
+        private DataSet dataSet;
+
+        public DatabaseManager()
         {
-            string strConnexion = "Data Source=localhost; Integrated Security=SSPI;" + "Initial Catalog=Restaurant";
+            connectionString = "Data Source=TEMPEST\\SQLEXPRESS;Initial Catalog=Restaurant;Integrated Security=True";
+            sqlQuery = string.Empty;
+            dataAdapter = new SqlDataAdapter();
+            connection = new SqlConnection(connectionString);
+            command = new SqlCommand();
+            dataSet = new DataSet();
+        }
+
+        public void ActionRows(string sqlQuery)
+        {
             try
             {
-                SqlConnection oConnection = new SqlConnection(strConnexion);
-                oConnection.Open();
-                Console.WriteLine("Etat de la connexion : " + oConnection.State);
-                oConnection.Close();
+                connection.Open();
+                command.CommandText = sqlQuery;
+                command.Connection = connection;
+                dataAdapter.SelectCommand = command;
+
+                command.ExecuteNonQuery();
             }
-            catch (Exception e)
+            finally
             {
-                Console.WriteLine("L'erreur suivante a été rencontrée :" + e.Message);
+                connection.Close();
+            }
+        }
+
+        public DataSet GetRows(string sqlQuery, string dataTableName)
+        {
+            try
+            {
+                connection.Open();
+                command.CommandText = sqlQuery;
+                command.Connection = connection;
+                dataAdapter.SelectCommand = command;
+
+                dataAdapter.Fill(dataSet, dataTableName);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return dataSet;
+        }
+
+        public void ShowAllTest1Elements()
+        {
+            try
+            {
+                sqlQuery = "SELECT * FROM test1"; // Remplacez "test1" par le nom de votre table
+
+                connection.Open();
+                command.CommandText = sqlQuery;
+                command.Connection = connection;
+                dataAdapter.SelectCommand = command;
+
+                dataAdapter.Fill(dataSet, "test1");
+
+                DataTable dataTable = dataSet.Tables["test1"];
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    foreach (DataColumn col in dataTable.Columns)
+                    {
+                        Console.Write(row[col] + "\t");
+                    }
+                    Console.WriteLine();
+                }
+            }
+            finally
+            {
+                connection.Close();
             }
         }
     }
 }
-
-//
-// using System;
-// using System.Data.SqlClient;
-//
-// public class Connection
-// {
-//     public static void Main1()
-//     {
-//         // Chaîne de connexion à la base de données
-//         string strConnexion = "Data Source=localhost; Integrated Security=SSPI;" + "Initial Catalog=Restaurant";
-//
-//         // Création de l'objet de connexion
-//         SqlConnection connection = new SqlConnection(strConnexion);
-//
-//         try
-//         {
-//             // Ouverture de la connexion
-//             connection.Open();
-//
-//             // Connexion réussie, vous pouvez exécuter des requêtes ici
-//
-//             // Exemple : exécution d'une requête SELECT
-//             string query = "SELECT * FROM essai";
-//             SqlCommand command = new SqlCommand(query, connection);
-//
-//             // Exécution de la requête et récupération des résultats
-//             SqlDataReader reader = command.ExecuteReader();
-//             while (reader.Read())
-//             {
-//                 // Traitez les données ici
-//                 string valeurColonne = reader.GetString(0);
-//                 Console.WriteLine(valeurColonne);
-//             }
-//             reader.Close();
-//         }
-//         catch (Exception ex)
-//         {
-//             // Gestion des erreurs
-//             Console.WriteLine("Une erreur s'est produite : " + ex.Message);
-//         }
-//         finally
-//         {
-//             // Fermeture de la connexion
-//             connection.Close();
-//         }
-//
-//         Console.ReadLine();
-//     }
-// }
