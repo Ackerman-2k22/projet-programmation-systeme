@@ -1,10 +1,11 @@
 -- Création de la table Ustensils
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Ustensiles')
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Ustensils')
 BEGIN
-    CREATE TABLE Ustensiles (
+    CREATE TABLE Ustensils (
         ustensil_id INT PRIMARY KEY,
         nom VARCHAR(50),
         qte INT
+
     );
 END
 GO
@@ -14,7 +15,7 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'ProduitConserve')
 BEGIN
     CREATE TABLE ProduitConserve (
         conserve_id INT PRIMARY KEY,
-        nom VARCHAR(255),
+        nom VARCHAR(50),
         quantité_stock INT,
         date_livraison DATE,
         date_peremption DATE
@@ -27,7 +28,7 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'ProduitSurgeles')
 BEGIN
     CREATE TABLE ProduitSurgeles (
         surgele_id INT PRIMARY KEY,
-        nom VARCHAR(255),
+        nom VARCHAR(50),
         quantité_stock INT,
         date_livraison DATE,
         date_peremption DATE
@@ -40,7 +41,7 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'ProduitFrais')
 BEGIN
     CREATE TABLE ProduitFrais (
         frais_id INT PRIMARY KEY,
-        nom VARCHAR(255),
+        nom VARCHAR(50),
         quantité_stock INT,
         date_livraison DATE,
         date_peremption DATE
@@ -53,7 +54,7 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'MaterielCuisine')
 BEGIN
     CREATE TABLE MaterielCuisine (
         materiel_id INT PRIMARY KEY,
-        nom VARCHAR(255),
+        nom VARCHAR(50),
         qte INT
     );
 END
@@ -64,8 +65,8 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Recette')
 BEGIN
     CREATE TABLE Recette (
         recette_id INT PRIMARY KEY,
-        nom VARCHAR(255),
-        description VARCHAR(255),
+        nom VARCHAR(50),
+        etapes VARCHAR(255),
         instructions TEXT
     );
 END
@@ -89,6 +90,7 @@ BEGIN
     CREATE TABLE RecetteUstensils (
         recette_id INT,
         ustensil_id INT,
+		quantité_utilisée INT,
         PRIMARY KEY (recette_id, ustensil_id),
         FOREIGN KEY (recette_id) REFERENCES Recette(recette_id),
         FOREIGN KEY (ustensil_id) REFERENCES Ustensils(ustensil_id)
@@ -165,4 +167,36 @@ BEGIN
 END
 GO
 
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Client' )
+BEGIN
+    CREATE TABLE Client (
+        client_id INT PRIMARY KEY,
+        nom VARCHAR(50),
+        nombre INT
+    );
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Commande' )
+BEGIN
+    CREATE TABLE Commande (
+        client_id INT,
+        plat_id INT,
+        PRIMARY KEY (client_id, plat_id),
+        FOREIGN KEY (client_id) REFERENCES Client(client_id),
+        FOREIGN KEY (plat_id) REFERENCES PlatCuisine(plat_id)
+    );
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Reservation' )
+BEGIN
+    CREATE TABLE Reservation (
+        client_id INT,
+        Heure timestamp,
+        PRIMARY KEY (client_id),
+        FOREIGN KEY (client_id) REFERENCES Client(client_id)
+    );
+END
+GO
 

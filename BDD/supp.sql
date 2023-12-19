@@ -1,3 +1,75 @@
+-- Code de suppression pour la table RecetteUstensils
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'RecetteUstensils')
+BEGIN
+    DROP TABLE RecetteUstensils;
+END
+GO
+
+
+
+-- Code de suppression pour la table RecetteProduitsConserve
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'RecetteProduitsConserve')
+BEGIN
+    DROP TABLE RecetteProduitsConserve;
+END
+GO
+
+
+
+-- Code de suppression pour la table RecetteProduitsSurgeles
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'RecetteProduitsSurgeles')
+BEGIN
+    DROP TABLE RecetteProduitsSurgeles;
+END
+GO
+
+
+
+-- Code de suppression pour la table RecetteProduitsFrais
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'RecetteProduitsFrais')
+BEGIN
+    DROP TABLE RecetteProduitsFrais;
+END
+GO
+
+
+
+-- Code de suppression pour la table RecetteMateriel
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'RecetteMateriel')
+BEGIN
+    DROP TABLE RecetteMateriel;
+END
+GO
+
+
+
+-- Code de suppression pour la table PlatRecette
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'PlatRecette')
+BEGIN
+    DROP TABLE PlatRecette;
+END
+GO
+
+-- Code de suppression pour la table Client
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'Client')
+BEGIN
+    DROP TABLE Client;
+END
+GO
+
+-- Code de suppression pour la table Commande
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'Commande')
+BEGIN
+    DROP TABLE Commande;
+END
+GO
+
+-- Code de suppression pour la table Reservation
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'Reservation')
+BEGIN
+    DROP TABLE Reservation;
+END
+GO
 
 
 -- Code de suppression pour la table Ustensils
@@ -57,59 +129,5 @@ GO
 IF EXISTS (SELECT * FROM sys.tables WHERE name = 'PlatCuisine')
 BEGIN
     DROP TABLE PlatCuisine;
-END
-GO
-
-
-
--- Code de suppression pour la table RecetteUstensils
-IF EXISTS (SELECT * FROM sys.tables WHERE name = 'RecetteUstensils')
-BEGIN
-    DROP TABLE RecetteUstensils;
-END
-GO
-
-
-
--- Code de suppression pour la table RecetteProduitsConserve
-IF EXISTS (SELECT * FROM sys.tables WHERE name = 'RecetteProduitsConserve')
-BEGIN
-    DROP TABLE RecetteProduitsConserve;
-END
-GO
-
-
-
--- Code de suppression pour la table RecetteProduitsSurgeles
-IF EXISTS (SELECT * FROM sys.tables WHERE name = 'RecetteProduitsSurgeles')
-BEGIN
-    DROP TABLE RecetteProduitsSurgeles;
-END
-GO
-
-
-
--- Code de suppression pour la table RecetteProduitsFrais
-IF EXISTS (SELECT * FROM sys.tables WHERE name = 'RecetteProduitsFrais')
-BEGIN
-    DROP TABLE RecetteProduitsFrais;
-END
-GO
-
-
-
--- Code de suppression pour la table RecetteMateriel
-IF EXISTS (SELECT * FROM sys.tables WHERE name = 'RecetteMateriel')
-BEGIN
-    DROP TABLE RecetteMateriel;
-END
-GO
-
-
-
--- Code de suppression pour la table PlatRecette
-IF EXISTS (SELECT * FROM sys.tables WHERE name = 'PlatRecette')
-BEGIN
-    DROP TABLE PlatRecette;
 END
 GO
