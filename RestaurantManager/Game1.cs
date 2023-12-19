@@ -13,6 +13,7 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Model _model;
+    private bool _isGamePaused = false;
 
     public Game1()
     {
@@ -38,15 +39,29 @@ public class Game1 : Game
         // TODO: use this.Content to load your game content here
         base.LoadContent();
     }
-
+    private bool _pauseKeyPressed = false;
     protected override void Update(GameTime gameTime)
     {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+        bool isPauseKeyDown = Keyboard.GetState().IsKeyDown(Keys.P) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Start);
+        if (isPauseKeyDown && !_pauseKeyPressed)
+        {
+            TogglePause();
+        }
+        _pauseKeyPressed = isPauseKeyDown;
+
+        // Reste du code de mise à jour
+        if (!_isGamePaused)
+        {
             restaurantController.Update(gameTime);
             restaurantController.CheckCollision();
+        }
+
         base.Update(gameTime);
+        base.Update(gameTime);
+    }
+    private void TogglePause()
+    {
+        _isGamePaused = !_isGamePaused;
     }
 
     protected override void Draw(GameTime gameTime)
