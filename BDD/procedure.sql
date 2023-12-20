@@ -43,7 +43,11 @@ GO
 USE Projet;
 GO
 
+<<<<<<< HEAD
 CREATE PROCEDURE GetMaterielByRecette1
+=======
+CREATE PROCEDURE GetMaterielByRecette
+>>>>>>> f996ad33d52e8a77808c4f7a76d5d5cde780e273
     @recette_id INT
 AS
 BEGIN
@@ -56,6 +60,7 @@ BEGIN
     LEFT JOIN MaterielCuisine ON RecetteMateriel.materiel_id = MaterielCuisine.materiel_id
     WHERE Recette.recette_id = @recette_id;
 END
+<<<<<<< HEAD
 GO
 
 CREATE PROCEDURE InsertUstensil
@@ -298,3 +303,6 @@ BEGIN
     DELETE FROM PlatCuisine
     WHERE plat_id = @plat_id
 EN
+=======
+GO
+>>>>>>> f996ad33d52e8a77808c4f7a76d5d5cde780e273
