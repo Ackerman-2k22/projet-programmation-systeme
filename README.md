@@ -1,4 +1,4 @@
-# Restaurant-Simulator2018 Groupe 2
+# Restaurant-Simulator Groupe 2
 
 ### Projet de simulation d'un restaurant dans le cadre de l'optimisation du service. Projet scolaire Ucac-Icam Decembre 2023
 
