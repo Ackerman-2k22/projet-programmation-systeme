@@ -28,10 +28,10 @@ public class Game1 : Game
     {
         // TODO: Add your initialization logic here
         _model = new Model();
-        restaurantView = new RestaurantView(_graphics, _spriteBatch, Content.Load<Texture2D>("ChefDeRang"), Content.Load<Texture2D>("MaitreDHotel"),Content.Load<Texture2D>("Table"), Content.Load<Texture2D>("Client"));
-        restaurantController = new RestaurantController(_model,restaurantView,5f);
+        restaurantView = new RestaurantView(_graphics, _spriteBatch, Content.Load<Texture2D>("ChefDeRang"), Content.Load<Texture2D>("MaitreDHotel"),Content.Load<Texture2D>("Table"), Content.Load<Texture2D>("client1"));
+        restaurantController = new RestaurantController(_model, restaurantView, 4f);
         _model._chefDeRangPosition =
-            new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
+            new Vector2(450,250);
         _model._maitreDHotelPosition =
             new Vector2(250, 200);
         _model._clientPosition =
@@ -68,15 +68,6 @@ public class Game1 : Game
         }
 
         base.Update(gameTime);
-    }
-    
-    private void UpdateGameLogic(GameTime gameTime)
-    { 
-        if (!_model.IsClientHandled)
-        {
-            restaurantController.Update();
-        }
-        
     }
     private void TogglePause()
     {

@@ -4,6 +4,9 @@ namespace RestaurantManager;
 
 public class MaitreDHotel
 {
+    private static MaitreDHotel instance;
+    private static readonly object lockObject = new object();
+
     private Model _model;
     public string Name { get; private set; }
     public Coordinate Position { get; set; }
@@ -12,6 +15,20 @@ public class MaitreDHotel
     {
         Name = name;
         Position = new Coordinate(250, 200);
+    }
+    public static MaitreDHotel GetInstance(string name)
+    {
+        if (instance == null)
+        {
+            lock (lockObject)
+            {
+                if (instance == null)
+                {
+                    instance = new MaitreDHotel(name);
+                }
+            }
+        }
+        return instance;
     }
     public void AssignTable(Table table, ChefDeRang chefDeRang)
     {

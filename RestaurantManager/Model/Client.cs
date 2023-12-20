@@ -2,6 +2,8 @@ namespace RestaurantManager;
 
 public class Client
 {
+
+    private IClientStrategy clientStrategy;
     private string nom;
     private string strategy;
     private string mood;
@@ -14,10 +16,24 @@ public class Client
     {
         this.nom = nom;
         this.strategy = strategy;
-        this.mood = mood;
         Position = new Coordinate(250, 250);
         NumberOfPeople = numberOfPeople;
         this.billAmount = billAmount;
+        switch (mood)
+        {
+            case "calm":
+                clientStrategy = new CalmClientStrategy();
+                break;
+            case "loud":
+                clientStrategy = new LoudClientStrategy();
+                break;
+            case "rushed":
+                clientStrategy = new RushedClientStrategy();
+                break;
+            default:
+                clientStrategy = new CalmClientStrategy();
+                break;
+        }
     }
 
     public string Nom()
@@ -64,5 +80,10 @@ public class Client
     public void requestBill()
     {
         // Demander l'addition
+    }
+    public void ExecuteStrategy()
+    {
+        // Exécuter le comportement du client en appelant la méthode Execute() de la stratégie actuelle
+        clientStrategy.Execute(this);
     }
 }
