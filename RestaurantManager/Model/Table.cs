@@ -1,11 +1,15 @@
+using System;
+
 namespace RestaurantManager
 {
-    public class Table
+    public class Table : IDisposable
     {
+        //public bool _occupied;
+        private RestaurantModel _restaurantModel;
         public int Capacity { get; private set; }
         public bool Occupied { get; private set; }
         public Coordinate Position { get; set; }
-        
+
 
         public Table(int capacity, Coordinate position)
         {
@@ -16,12 +20,25 @@ namespace RestaurantManager
 
         public void OccupyTable()
         {
-            Occupied = true;
+            if (!Occupied)
+            {
+                Occupied = true;
+//                _restaurantModel.NotifyTableOccupied(this);
+            }
         }
 
         public void ReleaseTable()
         {
-            Occupied = false;
+            if (Occupied)
+            {
+                Occupied = false;
+                _restaurantModel.NotifyTableReleased(this);
+            }
+        }
+
+        public void Dispose()
+        {
+            ReleaseTable();
         }
     }
 }
