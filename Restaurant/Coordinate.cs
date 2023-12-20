@@ -7,7 +7,7 @@ namespace Restaurant
 
         public Coordinate(float x, float y)
         {
-            X = x;
+            X = 1;
             Y = y;
         }
     }
