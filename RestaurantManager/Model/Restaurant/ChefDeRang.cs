@@ -17,7 +17,7 @@ namespace RestaurantManager
         {
             Name = name;
             assignedTable = null;
-            Position = new Coordinate(250, 200);
+            Position = new Coordinate(415, 210);
             this.commis = commis;
             _hasAssignedTable = false;
         }

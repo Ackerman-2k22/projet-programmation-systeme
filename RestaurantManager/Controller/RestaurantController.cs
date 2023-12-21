@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -19,43 +20,21 @@ public class RestaurantController : IObserver<Table>
     private bool clientAtTable;
     private bool _clientMoved;
     private Table assignedTable;
-    private List<Client> _clients;
-    
+    private ClientController _clientController;
     public RestaurantController(Model model, RestaurantView restaurantView, float speed)
     {
         _model = model;
         _restaurantView = restaurantView;
         _speed = speed;
         _initialPosition = _model.ChefDeRang.Position.Position;
-        _clients = new List<Client>(_model.AllClients);
+        _clientController = new ClientController(_model, _restaurantView,speed);
+        
         
     }
-    private void CallNextClient()
-    {
-        if (_clients.Count > 0)
-        {
-            // Sélectionnez le prochain client à partir de la liste des clients à gérer
-            Client nextClient = _clients[0];
-            _clients.RemoveAt(0); // Retirez le client de la liste
 
-            // Effectuez les actions nécessaires pour appeler le prochain client
-            // Par exemple, assignez le prochain client à la variable _model.Client
-            _model.Client = nextClient;
-            // Réinitialisez les états et effectuez d'autres actions nécessaires pour accueillir le prochain client
-            _model.IsClientHandled = false;
-            _model.IsClientArrived = false;
-            // ...
-        }
-    }
-    public void ResetClientHandlingState()
+    private bool CheckCollisionWithObstacles(Vector2 position)
     {
-        // Réinitialisez les états liés au client précédent
-        _model.IsClientHandled = false;
-        _model.IsChefDeRangHandle = false;
-        //assignedTable?.FreeTable();
-
-        // Appelez le deuxième client
-        CallNextClient();
+        return false;
     }
 
     public void OnNext(Table value)
@@ -79,37 +58,176 @@ public class RestaurantController : IObserver<Table>
     {
         _model.MaitreDHotel.AssignTable(table, _model.ChefDeRang);
     }
-public void Update()
+    public void Update()
+    {
+        if (!_model.IsClientHandled)
+        {
+            Table nearestTable = _model.Tables.Find(t => !t.Occupied);
+
+            bool clientArrived = CheckClientArrival(nearestTable);
+            bool chefDeRangMoved = MoveChefDeRangIfNeeded(clientArrived);
+
+            if (clientArrived)
+            {
+                _model.IsClientArrived = true;
+            }
+        }
+        else if (!_model.IsChefDeRangHandle)
+        {
+            Table nearestTable = _model.Tables.Find(t => !t.Occupied);
+
+            bool clientArrived = CheckClientArrival(nearestTable);
+            bool clientMoved = MoveClientAndChefDeRangToTableIfNeeded(nearestTable, clientArrived);
+        }
+        else if (!_model.IsMenuCommunicationDone)
+        {
+            bool chefDeRangMovedToChefDeCuisine = MoveChefDeRangToChefDeCuisine();
+
+            if (chefDeRangMovedToChefDeCuisine)
+            {
+                _model.IsMenuCommunicationDone = true;
+            }
+        }
+        else if (!_model.IsRecipeCommunicationDone)
+        {
+            bool chefDeCuisineMovedToChefDePartie = MoveChefDeCuisineToChefDePartie();
+
+            if (chefDeCuisineMovedToChefDePartie)
+            {
+                _model.IsRecipeCommunicationDone = true;
+            }
+        }
+        else if (!_model.IsPreparationCompleted)
+        {
+            bool chefDePartieMovedToCommisDeCuisine = MoveChefDePartieToCommisDeCuisine();
+
+            if (chefDePartieMovedToCommisDeCuisine)
+            {
+                _model.IsPreparationCompleted = true;
+            }
+        }
+        else if (!_model.IsDishDeliveryDone)
+        {
+            bool commisDeCuisineMovedToCounter = MoveCommisDeCuisineToCounter();
+
+            if (commisDeCuisineMovedToCounter)
+            {
+                _model.IsDishDeliveryDone = true;
+            }
+        }
+        else if (!_model.IsDishServedToClient)
+        {
+            bool serveurMovedToTable = MoveServeurToTable();
+
+            if (serveurMovedToTable)
+            {
+                _model.IsDishServedToClient = true;
+            }
+        }
+        else
+        {
+            _clientController.Update();
+        }
+    }
+    private bool MoveChefDeRangToChefDeCuisine()
 {
-    if (!_model.IsClientHandled)
-    {
-        Table nearestTable = _model.Tables.Find(t => !t.Occupied);
+    Vector2 targetPosition = _model._chefDeCuisinePosition;
+    float speed = _speed;
 
-        bool clientArrived = CheckClientArrival(nearestTable);
-        bool chefDeRangMoved = MoveChefDeRangIfNeeded(clientArrived);
+    bool chefDeRangAtChefDeCuisine = MoveToPosition(ref _model._chefDeRangPosition, targetPosition, speed);
 
-        if (clientArrived)
-        {
-            _model.IsClientArrived = true;
-        }
-    }
-    else if (!_model.IsChefDeRangHandle)
+    // Vérifier si le chef de rang est arrivé au chef de cuisine
+    if (chefDeRangAtChefDeCuisine && Vector2.Distance(_model._chefDeRangPosition, targetPosition) < 1f)
     {
-        Table nearestTable = _model.Tables.Find(t => !t.Occupied);
+        Console.WriteLine("Le Chef de Rang est arrivé au Chef de Cuisine !");
+        return true;
+    }
 
-        bool clientArrived = CheckClientArrival(nearestTable);
-        bool clientMoved = MoveClientAndChefDeRangToTableIfNeeded(nearestTable, clientArrived);
-    }
-    else
-    {
-        ReturnToInitial();
-        if (ReturnToInitial())
-        {
-                  ResetClientHandlingState();
-                  _model.Client = new Client("2", "calm", "calm,", 10);
-        }
-    }
+    return false;
 }
+
+private bool MoveChefDeCuisineToChefDePartie()
+{
+    Vector2 targetPosition = _model._chefDePartiePosition;
+    float speed = _speed;
+
+    bool chefDeCuisineAtChefDePartie = MoveToPosition(ref _model._chefDeCuisinePosition, targetPosition, speed);
+
+    // Vérifier si le chef de cuisine est arrivé au chef de partie
+    if (chefDeCuisineAtChefDePartie && Vector2.Distance(_model._chefDeCuisinePosition, targetPosition) < 1f)
+    {
+        Console.WriteLine("Le Chef de Cuisine est arrivé au Chef de Partie !");
+        return true;
+    }
+
+    return false;
+}
+
+private bool MoveChefDePartieToCommisDeCuisine()
+{
+    Vector2 targetPosition = _model._commisDeCuisinePosition;
+    float speed = _speed;
+
+    bool chefDePartieAtCommisDeCuisine = MoveToPosition(ref _model._chefDePartiePosition, targetPosition, speed);
+
+    // Vérifier si le chef de partie est arrivé au commis de cuisine
+    if (chefDePartieAtCommisDeCuisine && Vector2.Distance(_model._chefDePartiePosition, targetPosition) < 1f)
+    {
+        Console.WriteLine("Le Chef de Partie est arrivé au Commis de Cuisine !");
+        return true;
+    }
+
+    return false;
+}
+
+private bool MoveCommisDeCuisineToCounter()
+{
+    Vector2 targetPosition = _model._comptoirPosition;
+    float speed = _speed;
+
+    bool commisDeCuisineAtCounter = MoveToPosition(ref _model._commisDeCuisinePosition, targetPosition, speed);
+
+    // Vérifier si le commis de cuisine est arrivé au comptoir
+    if (commisDeCuisineAtCounter && Vector2.Distance(_model._commisDeCuisinePosition, targetPosition) < 1f)
+    {
+        Console.WriteLine("Le Commis de Cuisine est arrivé au comptoir !");
+        return true;
+    }
+
+    return false;
+}
+
+private bool MoveServeurToTable()
+{
+    Vector2 targetPosition = _model._clientPosition;
+    float speed = _speed;
+
+    bool serveurAtTable = MoveToPosition(ref _model._serveurPosition, targetPosition, speed);
+
+    // Vérifier si le serveur est arrivé à la table
+    if (serveurAtTable && Vector2.Distance(_model._serveurPosition, targetPosition) < 1f)
+    {
+        Console.WriteLine("Le Serveur est arrivé à la table !");
+        return true;
+    }
+
+    return false;
+}
+
+/*private bool MoveToPosition(ref Vector2 currentPosition, Vector2 targetPosition, float speed)
+{
+    Vector2 direction = targetPosition - currentPosition;
+    float distance = Vector2.Distance(currentPosition, targetPosition);
+
+    if (distance > 0.1f)
+    {
+        Vector2 moveVector = direction.normalized * speed * Time.deltaTime;
+        currentPosition += moveVector;
+        return false;
+    }
+
+    return true;
+}*/
 
 private bool CheckClientArrival(Table nearestTable)
 {
@@ -160,15 +278,74 @@ public bool MoveClientAndChefDeRangToTableIfNeeded(Table nearestTable, bool clie
             Vector2 targetPosition = assignedTable.Position.Position;
             float speed = _speed;
 
-            bool clientAtTable = MoveToPosition(ref _model._chefDeRangPosition, targetPosition, speed)
-                //&& MoveToPosition(ref _model._clientPosition, targetPosition, speed)
-                ;
-            bool chefDeRangAtTable = MoveToPosition(ref _model._clientPosition, targetPosition, speed);
+            int entitiesAtTable = 0;
 
-            if (clientAtTable && chefDeRangAtTable)
+            if (Vector2.Distance(_model._clientPosition, targetPosition) < distanceThreshold)
             {
-                if (Vector2.Distance(_model._clientPosition, assignedTable.Position.Position) < distanceThreshold ||
-                    Vector2.Distance(_model._chefDeRangPosition, assignedTable.Position.Position) < distanceThreshold)
+                entitiesAtTable++;
+            }
+
+            if (Vector2.Distance(_model._chefDeRangPosition, targetPosition) < distanceThreshold)
+            {
+                entitiesAtTable++;
+            }
+
+            if (entitiesAtTable == 2)
+            {
+                Console.WriteLine("Le Chef de Rang et le client sont arrivés à leur table !");
+                assignedTable.OccupyTable();
+                if (assignedTable.Occupied)
+                {
+                    Console.WriteLine("Le chef de rang a installé des clients sur une table !");
+                    Vector2 target = _model.ChefDeRang.Position.Position;
+                    MoveToPosition(ref _model._chefDeRangPosition, target, _speed);
+                    _model.IsChefDeRangHandle = true;
+                }
+                return true;
+            }
+            else
+            {
+                float arrivalTimeThreshold = 2.0f; // Temps minimal en secondes pour considérer l'arrivée à la table
+
+                Stopwatch stopwatch = Stopwatch.StartNew();
+                bool clientAtTable = false;
+                bool chefDeRangAtTable = false;
+
+                while (stopwatch.Elapsed.TotalSeconds < arrivalTimeThreshold)
+                {
+                    float t = (float)(stopwatch.Elapsed.TotalSeconds / arrivalTimeThreshold);
+
+                    // Interpoler les positions pour un mouvement fluide
+                    Vector2 interpolatedChefDeRangPosition = Vector2.Lerp(_model._chefDeRangPosition, targetPosition, t);
+                    Vector2 interpolatedClientPosition = Vector2.Lerp(_model._clientPosition, targetPosition, t);
+
+                    MoveToPosition(ref _model._chefDeRangPosition, interpolatedChefDeRangPosition, speed);
+                    MoveToPosition(ref _model._clientPosition, interpolatedClientPosition, speed);
+
+                    // Vérifier si le client est arrivé à la table
+                    if (!clientAtTable && Vector2.Distance(interpolatedClientPosition, targetPosition) < 0.1f)
+                    {
+                        clientAtTable = true;
+                        MoveToPosition(ref _model._clientPosition, targetPosition, 0f); // Arrêter le mouvement du client
+                    }
+
+                    // Vérifier si le chef de rang est arrivé à la table
+                    if (!chefDeRangAtTable && Vector2.Distance(interpolatedChefDeRangPosition, targetPosition) < 0.1f)
+                    {
+                        chefDeRangAtTable = true;
+                        MoveToPosition(ref _model._chefDeRangPosition, targetPosition, 0f); // Arrêter le mouvement du chef de rang
+                    }
+
+                    // Sortir de la boucle si les deux entités sont arrivées à la table
+                    if (clientAtTable && chefDeRangAtTable)
+                    {
+                        break;
+                    }
+                }
+
+                stopwatch.Stop();
+
+                if (clientAtTable && chefDeRangAtTable)
                 {
                     Console.WriteLine("Le Chef de Rang et le client sont arrivés à leur table !");
                     assignedTable.OccupyTable();
@@ -179,9 +356,9 @@ public bool MoveClientAndChefDeRangToTableIfNeeded(Table nearestTable, bool clie
                         MoveToPosition(ref _model._chefDeRangPosition, target, _speed);
                         _model.IsChefDeRangHandle = true;
                     }
+                    return true;
                 }
             }
-                return clientAtTable && chefDeRangAtTable;
         }
     }
 
@@ -195,15 +372,16 @@ public bool ReturnToInitial()
     float speed = _speed;
 
     bool chefDeRangAtInitialPosition = MoveToPosition(ref _model._chefDeRangPosition, initialChefDeRangPosition, speed);
-    
+
+    // Vérifier si le chef de rang est revenu à sa position initiale
     if (chefDeRangAtInitialPosition && Vector2.Distance(_model._chefDeRangPosition, initialChefDeRangPosition) < 1f)
     {
         Console.WriteLine("Le chef de rang est revenu à sa position initiale !");
-        ResetClientHandlingState();
-        CallNextClient();
+        _model.IsChefDeRangHandle = false;
+        return true;
     }
 
-    return chefDeRangAtInitialPosition;
+    return false;
 }
 
 private bool MoveToPosition(ref Vector2 currentPosition, Vector2 targetPosition, float speed)
@@ -224,20 +402,35 @@ private bool MoveToPosition(ref Vector2 currentPosition, Vector2 targetPosition,
     }
 }
 
-private Table FindNearestTableWithCapacity(Table referenceTable, int minCapacity)
+private Table FindNearestTableWithCapacity(Table referenceTable, int numberOfPeople)
 {
     Table nearestTable = null;
     float nearestDistance = float.MaxValue;
 
     foreach (Table table in _model.Tables)
     {
-        if (!table.Occupied && table.Capacity >= minCapacity)
+        if (!table.Occupied && table.Capacity == numberOfPeople)
         {
             float distance = CalculateDistance(referenceTable.Position, table.Position);
             if (distance < nearestDistance)
             {
                 nearestTable = table;
                 nearestDistance = distance;
+            }
+        }
+    }
+    if (nearestTable == null)
+    {
+        foreach (Table table in _model.Tables)
+        {
+            if (!table.Occupied && table.Capacity > numberOfPeople)
+            {
+                float distance = CalculateDistance(referenceTable.Position, table.Position);
+                if (distance < nearestDistance)
+                {
+                    nearestTable = table;
+                    nearestDistance = distance;
+                }
             }
         }
     }

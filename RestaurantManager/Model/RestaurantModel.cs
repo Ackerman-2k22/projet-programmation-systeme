@@ -53,4 +53,5 @@ public class RestaurantModel : IObservable<Table>
 
         return new Unsubscriber<Table>(_observers, observer);
     }
+    
 }

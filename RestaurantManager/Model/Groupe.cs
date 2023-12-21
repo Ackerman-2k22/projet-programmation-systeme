@@ -1,6 +1,7 @@
 namespace RestaurantManager;
 
-public class Client
+
+public class Groupe
 {
 
     private IClientStrategy clientStrategy;
@@ -12,7 +13,7 @@ public class Client
     public int NumberOfPeople { get; set; }
     public Coordinate Position { get; set; }
 
-    public Client(string nom, string strategy, string mood, int numberOfPeople)
+    public Groupe(string nom, string strategy, string mood, int numberOfPeople)
     {
         this.nom = nom;
         this.strategy = strategy;
@@ -81,9 +82,5 @@ public class Client
     {
         // Demander l'addition
     }
-    public void ExecuteStrategy()
-    {
-        // Exécuter le comportement du client en appelant la méthode Execute() de la stratégie actuelle
-        clientStrategy.Execute(this);
-    }
+
 }

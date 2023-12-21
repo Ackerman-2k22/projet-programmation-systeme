@@ -10,6 +10,7 @@ namespace RestaurantManager;
 public class Game1 : Game
 {
     private RestaurantController restaurantController;
+    private ClientController clientController;
     private RestaurantView restaurantView;
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
@@ -20,6 +21,8 @@ public class Game1 : Game
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
+        _graphics.PreferredBackBufferWidth = 1080; 
+        _graphics.PreferredBackBufferHeight = 740;
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
@@ -28,14 +31,34 @@ public class Game1 : Game
     {
         // TODO: Add your initialization logic here
         _model = new Model();
-        restaurantView = new RestaurantView(_graphics, _spriteBatch, Content.Load<Texture2D>("ChefDeRang"), Content.Load<Texture2D>("MaitreDHotel"),Content.Load<Texture2D>("Table"), Content.Load<Texture2D>("client1"));
+
+        restaurantView = new RestaurantView(_graphics, _spriteBatch, Content.Load<Texture2D>("client1"), Content.Load<Texture2D>("client4"),Content.Load<Texture2D>("Table"), Content.Load<Texture2D>("client1"),Content.Load<Texture2D>("client2"),Content.Load<Texture2D>("Client"),Content.Load<Texture2D>("client3"),Content.Load<Texture2D>("restaurant"),Content.Load<Texture2D>("groupe7"),Content.Load<Texture2D>("cuisto"),Content.Load<Texture2D>("cuisto"),Content.Load<Texture2D>("client2"),Content.Load<Texture2D>("client4"));
         restaurantController = new RestaurantController(_model, restaurantView, 4f);
+        clientController = new ClientController(_model, restaurantView, 4f);
         _model._chefDeRangPosition =
-            new Vector2(450,250);
+            new Vector2(415,210);
         _model._maitreDHotelPosition =
-            new Vector2(250, 200);
+            new Vector2(920, 320);
         _model._clientPosition =
-            new Vector2(30, 10);
+            new Vector2(920, 730);
+        _model._groupePosition = 
+            new Vector2(920, 730);
+        _model._serveurPosition =
+            new Vector2(170, 250);
+        _model._commisDeSallePosition =
+            new Vector2(189, 460);
+        _model._chefDeCuisinePosition =
+            new Vector2(76, 119);
+        _model._chefDePartiePosition =
+            new Vector2(79, 349);
+        _model._plongeurPosition = 
+            new Vector2(74, 650);
+        _model._commisDeCuisinePosition =
+            new Vector2(74, 545);
+        _model._comptoirPosition = 
+            new Vector2(123, 350);
+        _model._chefDeRangPosition2 =
+            new Vector2(415, 382);
         base.Initialize();
     }
 
@@ -61,6 +84,8 @@ public class Game1 : Game
             TogglePause();
         }
         _pauseKeyPressed = isPauseKeyDown;
+
+        bool isRestaurantUpdateFinished = false;
 
         if (!_isGamePaused)
         {
