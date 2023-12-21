@@ -156,7 +156,7 @@ private bool MoveChefDeCuisineToChefDePartie()
     // Vérifier si le chef de cuisine est arrivé au chef de partie
     if (chefDeCuisineAtChefDePartie && Vector2.Distance(_model._chefDeCuisinePosition, targetPosition) < 1f)
     {
-        Console.WriteLine("Le Chef de Cuisine est arrivé au Chef de Partie !");
+        Console.WriteLine("Le Chef de Cuisine communique la recette au Chef de Partie !");
         return true;
     }
 
@@ -173,7 +173,7 @@ private bool MoveChefDePartieToCommisDeCuisine()
     // Vérifier si le chef de partie est arrivé au commis de cuisine
     if (chefDePartieAtCommisDeCuisine && Vector2.Distance(_model._chefDePartiePosition, targetPosition) < 1f)
     {
-        Console.WriteLine("Le Chef de Partie est arrivé au Commis de Cuisine !");
+        Console.WriteLine("Le Chef de Partie prépare le repas avec le Commis de Cuisine !");
         return true;
     }
 
@@ -190,7 +190,7 @@ private bool MoveCommisDeCuisineToCounter()
     // Vérifier si le commis de cuisine est arrivé au comptoir
     if (commisDeCuisineAtCounter && Vector2.Distance(_model._commisDeCuisinePosition, targetPosition) < 1f)
     {
-        Console.WriteLine("Le Commis de Cuisine est arrivé au comptoir !");
+        Console.WriteLine("Le Commis de Cuisine dépose le plat au comptoir !");
         return true;
     }
 
@@ -207,7 +207,7 @@ private bool MoveServeurToTable()
     // Vérifier si le serveur est arrivé à la table
     if (serveurAtTable && Vector2.Distance(_model._serveurPosition, targetPosition) < 1f)
     {
-        Console.WriteLine("Le Serveur est arrivé à la table !");
+        Console.WriteLine("Le Serveur recupère le plat du comptoir et s'en va servir le client !");
         return true;
     }
 

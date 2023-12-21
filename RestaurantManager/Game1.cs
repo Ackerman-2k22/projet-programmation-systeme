@@ -32,9 +32,9 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
         _model = new Model();
 
-        restaurantView = new RestaurantView(_graphics, _spriteBatch, Content.Load<Texture2D>("client1"), Content.Load<Texture2D>("client4"),Content.Load<Texture2D>("Table"), Content.Load<Texture2D>("client1"),Content.Load<Texture2D>("client2"),Content.Load<Texture2D>("Client"),Content.Load<Texture2D>("client3"),Content.Load<Texture2D>("restaurant"),Content.Load<Texture2D>("groupe7"),Content.Load<Texture2D>("cuisto"),Content.Load<Texture2D>("cuisto"),Content.Load<Texture2D>("client2"),Content.Load<Texture2D>("client4"));
-        restaurantController = new RestaurantController(_model, restaurantView, 4f);
-        clientController = new ClientController(_model, restaurantView, 4f);
+        restaurantView = new RestaurantView(_graphics, _spriteBatch, Content.Load<Texture2D>("client1"), Content.Load<Texture2D>("client4"),Content.Load<Texture2D>("Table"), Content.Load<Texture2D>("client3"),Content.Load<Texture2D>("client2"),Content.Load<Texture2D>("Client"),Content.Load<Texture2D>("client3"),Content.Load<Texture2D>("restaurant"),Content.Load<Texture2D>("groupe7"),Content.Load<Texture2D>("cuisto"),Content.Load<Texture2D>("cuisto"),Content.Load<Texture2D>("client2"),Content.Load<Texture2D>("client4"));
+        restaurantController = new RestaurantController(_model, restaurantView, 1f);
+        clientController = new ClientController(_model, restaurantView, 1f);
         _model._chefDeRangPosition =
             new Vector2(415,210);
         _model._maitreDHotelPosition =
