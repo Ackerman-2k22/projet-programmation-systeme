@@ -19,7 +19,7 @@ namespace Clients
         private Random rand = new Random();
         private int X, Y;
         private Color[] newColor = { Color.Red, Color.Turquoise, Color.Gold, Color.LimeGreen };
-        private double spawnTime = 20;
+        
 
         private System.Timers.Timer pathfindingTimer;
         private int targetX = 782;
@@ -54,6 +54,8 @@ namespace Clients
         Point[] targetPositions_12 = new Point[] { new Point(285, 480), new Point(231, 480), new Point(231, 513), new Point(275, 514),new Point(285, 480), new Point(231, 480), new Point(231, 513), new Point(275, 514),new Point(285, 480), new Point(231, 480), new Point(231, 513), new Point(275, 514), new Point(231, 513), new Point(275, 514) };
         Point[] targetPositions_13 = new Point[] { new Point(285, 480), new Point(231, 480), new Point(231, 513), new Point(275, 514), new Point(231, 513), new Point(275, 514) };
         //
+        private int spawnTime = 100;
+        
         private int pictureBoxCount = 1;
         private int currentPictureBoxIndex = 0;
         private List<PictureBox> players = new List<PictureBox>();
@@ -66,21 +68,40 @@ namespace Clients
         {
 
             InitializeComponent();
+           int num = rand.Next(1, 6);
+            if (num == 1 || num==2)
+            {
+               new  Thread(StartPathfinding).Start();
+               Thread.Sleep(5000);
+            }else if (num ==3 || num ==4)
+            {
+                new  Thread(StartPathfinding).Start();
+                Thread.Sleep(5000);
+            }
             resetGame();
            
-           // new Thread(resetGame).Start();
-            new Thread(StartPathfinding).Start();
+            //new Thread(resetGame).Start();
+            //new Thread(StartPathfinding).Start();
             //new Thread(MakePictureBox).Start();
             //new Thread(MakePictureBox_gauche).Start();
         }
 
         private void StartPathfinding()
         {
-            Thread.Sleep(500);
+            Thread.Sleep(5000);
             // Initialiser le timer
             pathfindingTimer = new System.Timers.Timer();
             pathfindingTimer.Interval = 100; // Intervalle de mise à jour du déplacement (en millisecondes)
-            pathfindingTimer.Elapsed += PathfindingTable_11;
+            pathfindingTimer.Elapsed += PathfindingTable_1;
+            pathfindingTimer.Start();
+        }
+        private void StartPathfinding2()
+        {
+            Thread.Sleep(5000);
+            // Initialiser le timer
+            pathfindingTimer = new System.Timers.Timer();
+            pathfindingTimer.Interval = 100; // Intervalle de mise à jour du déplacement (en millisecondes)
+            pathfindingTimer.Elapsed += PathfindingTable_2;
             pathfindingTimer.Start();
         }
         
@@ -401,6 +422,7 @@ namespace Clients
 
         private void PathfindingTable_11(object sender, ElapsedEventArgs e)
         {
+            
             // Déplacer le personnage vers la gauche jusqu'au point targetX
             //Console.WriteLine("Position of man"+Chefrang_2.Top);
             if (Chefrang_2.Top > table11[3] / 1.23)
@@ -487,6 +509,10 @@ namespace Clients
                 new_pic.Image = GetRandomImage();
                 new_pic.SizeMode = PictureBoxSizeMode.StretchImage;
                 new_pic.Location = new Point(610, 505);
+                
+                items.Add(new_pic);
+                this.Controls.Add(new_pic);
+                new_pic.BringToFront();
 
                 // Vérifier si l'indice est valide dans le tableau des positions cibles
                 if (i < targetPositions_1.Length)
@@ -503,13 +529,15 @@ namespace Clients
                     pathfindingTimer.Tick += (sender, e) => PathfindingPlayer(new_pic, targetX, targetY, pathfindingTimer);
                     pathfindingTimer.Start();
 
-                    players.Add(new_pic);
+                    //players.Add(new_pic);
                     pictureBoxCount++;
                 }
 
-                items.Add(new_pic);
-                this.Controls.Add(new_pic);
-                new_pic.BringToFront();
+                System.Windows.Forms.Timer Timer = new System.Windows.Forms.Timer();
+                Timer.Interval = 5000;
+                
+                Timer.Start();
+
             }
             Console.WriteLine(pictureBoxCount);
             MovePlayerToNextTarget();
@@ -517,12 +545,13 @@ namespace Clients
         }
         private void MovePlayerToNextTarget()
         {
+            
             if (currentPlayerIndex >= players.Count)
             {
                 // Tous les joueurs ont atteint leur cible, sortir de la méthode
                 return;
             }
-
+            
             PictureBox currentPlayer = players[currentPlayerIndex];
             //int targetX = 910;
             //int targetY = 400;
@@ -538,6 +567,7 @@ namespace Clients
         
         private void PathfindingPlayer(PictureBox pictureBox, int targetX, int targetY, System.Windows.Forms.Timer pathfindingTimer)
         {
+            
             int step = 5;
             //Console.WriteLine(targetY);
             if (pictureBox.Top > targetY / 1.23)
