@@ -67,10 +67,16 @@ namespace Clients
 
             InitializeComponent();
             resetGame();
+           
+           // new Thread(resetGame).Start();
+            new Thread(StartPathfinding).Start();
+            //new Thread(MakePictureBox).Start();
+            //new Thread(MakePictureBox_gauche).Start();
         }
 
         private void StartPathfinding()
         {
+            Thread.Sleep(500);
             // Initialiser le timer
             pathfindingTimer = new System.Timers.Timer();
             pathfindingTimer.Interval = 100; // Intervalle de mise à jour du déplacement (en millisecondes)
@@ -507,6 +513,7 @@ namespace Clients
             }
             Console.WriteLine(pictureBoxCount);
             MovePlayerToNextTarget();
+            
         }
         private void MovePlayerToNextTarget()
         {
@@ -665,6 +672,7 @@ namespace Clients
             
             private void MakePictureBox_gauche_bas()
             {
+                
                 int pictureBoxCount = 0;
             for (int i = 0; i < rand.Next(1,6); i++)
             {
@@ -696,12 +704,11 @@ namespace Clients
                 }
 
                 items.Add(new_pic);
-                this.Controls.Add(new_pic);
+                this.Controls.Add(new_pic);  //Responsible for printing on map
                 new_pic.BringToFront();
-                Console.WriteLine(i);
             }
             MovePlayerToNextTarget_gauche_bas();
-           // Console.WriteLine(pictureBoxCount);
+            Console.WriteLine(pictureBoxCount);
             
         }
         // pour les clients des table de gauche
@@ -769,56 +776,7 @@ namespace Clients
             Image[] images = { Properties.Resources.droit, Properties.Resources.droit, Properties.Resources.droit }; // Ajoutez ici toutes les images possibles
             return images[rand.Next(0, images.Length)];
         }
-        private void Keyisdown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Up)
-            {
-                goup = true;
-            }
-
-            if (e.KeyCode == Keys.Left)
-            {
-                goleft = true;
-            }
-
-            if (e.KeyCode == Keys.Right)
-            {
-                goright = true;
-            }
-
-            if (e.KeyCode == Keys.Down)
-            {
-                godown = true;
-            }
-            
-            //
-            
-        }
-
-        private void Keyisup(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Up)
-            {
-                goup = false;
-            }
-
-            if (e.KeyCode == Keys.Left)
-            {
-                goleft = false;
-            }
-
-            if (e.KeyCode == Keys.Right)
-            {
-                goright = false;
-            }
-
-            if (e.KeyCode == Keys.Down)
-            {
-                godown = false;
-            }
-            
-        }
-
+        
         private void mainGameTimer(object sender, ElapsedEventArgs e)
         {
             if (goleft == true)
@@ -826,89 +784,48 @@ namespace Clients
                 man2.Left -= playerSpeed;
                 man2.Image = Properties.Resources.droit;
             }
+
             if (goright == true)
             {
                 man2.Left += playerSpeed;
-               man2.Image = Properties.Resources.droit;
+                man2.Image = Properties.Resources.droit;
             }
+
             if (goup == true)
             {
                 man2.Top -= playerSpeed;
-               man2.Image = Properties.Resources.droit;
+                man2.Image = Properties.Resources.droit;
             }
+
             if (godown == true)
             {
                 man2.Top += playerSpeed;
-               man2.Image = Properties.Resources.droit;
+                man2.Image = Properties.Resources.droit;
             }
-            //MakePicrureBox();
-            
-           /* if (man2.Left <= 100 )
-            {
-                Console.WriteLine("Position of man"+man.Left);
-                man2.Left = man2.Left + playerSpeed-4;
-                
-            }
-
-            else if (man2.Top<451)
-            {
-                man2.Top = man2.Top + playerSpeed - 4;
-            }*/
-            //
-            /*spawnTime -= 1;
-            if (spawnTime<1)
-            {
-               MakePicrureBox();
-                //spawnTime = 50;
-              //  Thread.Sleep(1000);
-                foreach (PictureBox item in items.ToList())
-                {
-                    if (man2.Bounds.IntersectsWith(item.Bounds))
-                    {
-                        items.Remove(item);
-                        this.Controls.Remove(item);
-                    }
-                    
-                }
-            }*/
         }
 
-        /*private void MakePictureBox()
+        static void waitSomeTime(int seconds)
         {
-            //for (int i = 0; i < rand.Next(1,3); i++)
-            for (int i = 0; i < 4; i++)
-            {   
-                Console.WriteLine(i);
-                PictureBox new_pic = new PictureBox();
-                new_pic.Width = 17;
-                new_pic.Height = 17;
-                new_pic.Image = GetRandomImage(); // Utilisez une méthode pour obtenir une image aléatoire
-                new_pic.SizeMode = PictureBoxSizeMode.StretchImage;
-                // X = rand.Next(10, this.ClientSize.Width - new_pic.Width);
-                // Y = rand.Next(10, this.ClientSize.Height - new_pic.Height);
-                X = 610 ;
-                Y = 505;
-                new_pic.Location = new Point(X, Y);
-                items.Add(new_pic);
-                this.Controls.Add(new_pic);
-                new_pic.BringToFront();
-                //Console.WriteLine(items.Count());
-            }
-        }*/
-
+            Console.WriteLine("come");
+           
+        }
+        
         private void resetGame()
         {
+         Thread.Sleep(2000);   
             //Score.Text = "score: 0";
            // man2.Left = 59;
             //man2.Top = 142;
             playerSpeed = 8;
-            StartPathfinding();
+            MakePictureBox();
+           /* StartPathfinding();
             MakePictureBox();
             MakePictureBox_gauche();
+            
             MakePictureBox_gauche_bas();
            // this.BackgroundImage = Properties.Resources.plan;
             //this.BackgroundImageLayout = ImageLayout.Stretch;
-            gameTimer.Start();
+            gameTimer.Start();*/
             
         }
 

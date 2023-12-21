@@ -1,4 +1,7 @@
-﻿namespace Clients
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace Clients
 {
     partial class Form1
     {
@@ -160,8 +163,8 @@
             this.Controls.Add(this.Score);
             this.Location = new System.Drawing.Point(15, 15);
             this.Name = "Form1";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Keyisdown);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Keyisup);
+          //  this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Keyisdown);
+            //this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Keyisup);
             ((System.ComponentModel.ISupportInitialize)(this.gameTimer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.man)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BgMap)).EndInit();
@@ -171,6 +174,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
+            Thread.Sleep(5000);
         }
 
         private System.Windows.Forms.PictureBox pictureBox2;
@@ -190,5 +194,7 @@
         private System.Windows.Forms.PictureBox man;
 
         #endregion
+        
+        
     }
 }
