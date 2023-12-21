@@ -7,4 +7,4 @@ Un projet signé par la super équipe du groupe 2 :
 - Charles-Samuel Tamba
 - Nyawa Franck
 - Ghomsi Rayan
-- Kongne Verra (Chef de prrojet)
+- Kongne Verra (Chef de projet)
